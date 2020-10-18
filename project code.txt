@@ -1,0 +1,235 @@
+#include<Servo.h>
+
+#define uptrigger 3
+#define upecho 4
+#define lowtrigger 7
+#define lowecho 8
+#define CW 0
+#define CCW 1
+#define CW1 12
+#define CCW1 13
+
+const int servoPin1 = 5;
+const int servoPin2 = 6;
+const int servoPin3 = 9;
+const int servoPin4 = 10;
+const int servoPin5 = 11;
+const int metal = 2;
+
+int distance,us,ls,pos1,pos2,con,angle;
+long duration;
+Servo lservol;
+Servo lservor;
+Servo uservol;
+Servo uservor;
+Servo rservo;
+void setup () 
+{ 
+  //Setup runs once//
+  Serial.begin(9600);
+  pinMode(CW,OUTPUT);
+  pinMode(CCW,OUTPUT); 
+  pinMode(CW1,OUTPUT);
+  pinMode(CCW1,OUTPUT); 
+  pinMode(uptrigger,OUTPUT);
+  pinMode(lowtrigger,OUTPUT);
+  pinMode(upecho,INPUT);
+  pinMode(lowecho,INPUT);
+  lservol.attach(servoPin1);
+  lservor.attach(servoPin2); 
+  uservol.attach(servoPin3);
+  uservor.attach(servoPin4); 
+  rservo.attach(servoPin5);
+}
+void loop() 
+{
+  /*sonar(uptrigger,upecho);
+  us = distance;
+  Serial.print("up Distance: ");
+  Serial.println(us);
+  delay (1000);
+  sonar(lowtrigger,lowecho);
+  ls = distance;
+  Serial.print("low Distance: ");
+  Serial.println(ls);
+  delay (1000);
+ 
+ if(us<20 && ls<=20)
+  {
+    backward ();
+    delay (2000);
+    stay ();
+    delay (3000);
+    left ();
+    delay (10000);
+  }
+  
+  else if (us<20 && ls>20)
+  {
+    backward ();
+    delay (2000);
+    stay ();
+    delay (3000);
+    left ();
+    delay (10000);
+  }
+  else if(us>=20 && ls<=20)
+  {
+    backward ();
+    delay (2000);
+    stay ();
+    delay (3000);
+    servo2();
+    delay (5000);
+    servo3();
+    delay (5000);
+    servo4();
+    delay (5000);
+    servo5();
+    delay (5000);
+    servo1();
+    delay (5000);
+  }
+  else if(us>=20 && ls>20)
+  {
+    forward ();
+    delay (1000);
+  }
+  else
+  {
+    stay ();
+  }*/
+  servo1();
+  delay (2000);
+  servo2a ();
+  delay (2000);
+  servo2b ();
+  delay (2000);
+  servo4();
+  delay (2000);
+  servo5();
+  delay (2000);
+}
+void forward ()
+{
+  digitalWrite(CW,HIGH);
+  digitalWrite(CCW,LOW);
+  digitalWrite(CW1,HIGH); 
+  digitalWrite(CCW1,LOW);
+  Serial.println("forward");
+}
+void backward ()
+{
+  digitalWrite(CW,LOW);
+  digitalWrite(CCW,HIGH);
+  digitalWrite(CW1,LOW); 
+  digitalWrite(CCW1,HIGH);
+  Serial.println("backward");
+}
+void right ()
+{
+  digitalWrite(CW,HIGH);
+  digitalWrite(CCW,LOW);
+  digitalWrite(CW1,LOW); 
+  digitalWrite(CCW1,HIGH);
+  Serial.println("right");
+}
+void left ()
+{
+  digitalWrite(CW,LOW);
+  digitalWrite(CCW,HIGH);
+  digitalWrite(CW1,HIGH); 
+  digitalWrite(CCW1,LOW);
+  Serial.println("left");
+}
+void stay ()
+{
+  digitalWrite(CW,HIGH);
+  digitalWrite(CCW,LOW);
+  digitalWrite(CW1,HIGH); 
+  digitalWrite(CCW1,LOW);
+  delay(500);
+  digitalWrite(CW,LOW);
+  digitalWrite(CCW,LOW);
+  digitalWrite(CW1,LOW); 
+  digitalWrite(CCW1,LOW);
+  Serial.println("stop");
+}
+void sonar (int trig,int echo)
+{
+digitalWrite(trig, LOW);
+delayMicroseconds(2);
+digitalWrite(trig, HIGH);
+delayMicroseconds(10);
+digitalWrite(trig, LOW);
+duration = pulseIn(echo, HIGH);
+distance= duration*0.034/2;
+}
+void servo1()
+{
+    lservor.write(0);
+    delay (500);
+    lservol.write(180);
+    delay (500);
+    uservor.write(50);
+    delay (500);
+    uservol.write(130);
+    delay (500);
+    Serial.println("Normal Position");
+ }
+void servo2a ()
+{
+    uservor.write(160);
+    delay (1000);
+    uservol.write(20);
+    delay (1000); 
+    Serial.println("2a position");
+}
+void servo2b()
+{
+    lservor.write(90);
+    delay (1000);
+    lservol.write(90);
+    delay (1000);
+    Serial.println("2b position");
+}
+void servo3()
+{
+ if(digitalRead(metal)==HIGH)
+    {
+    for(angle = 0; angle < 200; angle += 1)//command to move from 0 degrees to 180 degrees 
+    {                                  
+    rservo.write(angle); //command to rotate the servo to the specified angle        
+    delay (15);            
+    } 
+    delay (1000);
+    }
+  else
+   {
+    for (angle = 200; angle >= 1; angle -= 1) //command to move from 180 degrees to 0 degrees 
+    {                                
+    rservo.write(angle);     //command to rotate the servo to the specified angle          
+    delay (15);      
+    } 
+    delay(1000);
+   }
+  Serial.println("Metal Check");
+   }
+
+void servo4()
+{
+  uservor.write(0);
+  uservol.write(180);
+  delay (500);
+  }
+void servo5()
+{
+    uservor.write(160);
+    delay (100);
+    uservol.write(20);
+    delay (100);
+    lservor.write(90);
+    delay (500);
+    lservol.write(90);
+    delay (500);
+    Serial.println("Picking Position");
